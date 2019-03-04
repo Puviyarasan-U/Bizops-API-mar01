@@ -177,7 +177,7 @@ function businessEntity(v1, cb) {
             connection.release();
         });
         request.addParameter('USER_ID', sql.Int, v1.UserID);
-        request.addParameter('BUS_ENT_ID', sql.Int, v1.BizID);
+        request.addParameter('BUS_ENT_ID', sql.VarChar, v1.BizID);
         request.addParameter('COMPANY_NAME', sql.VarChar, v1.CompanyName);
         request.addParameter('EMAIL', sql.VarChar, v1.Email);
         request.addParameter('ADDRESS', sql.VarChar, v1.Address);

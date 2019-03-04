@@ -462,6 +462,7 @@ function getLease(cb) {
         LEFT JOIN LEASE_PREMISES LP ON LP.BUS_ENT_ID = BI.BUS_ENT_ID
         LEFT JOIN LEASE_PRIME_IMAGE LPI ON LPI.BUS_ENT_ID = LP.BUS_ENT_ID`;
         
+
         const request = new Request(query, (err, rowCount, rows) => {
             if (err) {
                 console.log(err)
