@@ -255,9 +255,9 @@ function getProfSellerList(v1,cb) {
         }
         var jsonArray = [];
         var query = `SELECT * FROM BUSINESS_SERVICE BS
-          LEFT JOIN INTRSDATA ID ON BS.COMPANY_ID=ID.COMPANY_ID
-          LEFT JOIN COMPANY_DETAILS CO ON CO.COMPANY_ID=BS.COMPANY_ID
-          WHERE PROF_ID=${v1}`;
+                    LEFT JOIN INTRSDATA ID ON BS.COMPANY_ID=ID.COMPANY_ID
+                    LEFT JOIN COMPANY_DETAILS CO ON CO.COMPANY_ID=BS.COMPANY_ID
+                    WHERE PROF_ID=${v1}`;
         const request = new Request(query, (err, rowCount, rows) => {
             if (err) {
                 console.log(err)
@@ -295,9 +295,9 @@ function getProfBuyerList(v1,cb) {
         }
         var jsonArray = [];
         var query = `SELECT * FROM USER_SERVICE US
-        LEFT JOIN INTRSDATA ID ON US.TRAN_ID=ID.TRAN_ID
-        LEFT JOIN COMPANY_DETAILS CO ON CO.COMPANY_ID=ID.COMPANY_ID
-         WHERE PROF_ID=${v1}`;
+                LEFT JOIN INTRSDATA ID ON US.TRAN_ID=ID.TRAN_ID
+                LEFT JOIN COMPANY_DETAILS CO ON CO.COMPANY_ID=ID.COMPANY_ID
+                WHERE PROF_ID=${v1}`;
         const request = new Request(query, (err, rowCount, rows) => {
             if (err) {
                 console.log(err)

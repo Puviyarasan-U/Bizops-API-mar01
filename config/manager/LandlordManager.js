@@ -72,8 +72,23 @@ function uploadImage(req, res, cb) {
                 company_id = req.body.Company_ID;
                 console.log(company_id);
 
-                var query = "INSERT INTO LEASE_PRIME_IMAGE VALUES ('" + company_id + "','" + fileName + "','" + path + "') ";
-                console.log(query)
+               // var query = "INSERT INTO LEASE_PRIME_IMAGE VALUES ('" + company_id + "','" + fileName + "','" + path + "') ";
+              var query = `IF EXISTS (SELECT BUS_ENT_ID 
+                FROM LEASE_PRIME_IMAGE 
+                WHERE BUS_ENT_ID= ${company_id})
+                BEGIN
+                    UPDATE LEASE_PRIME_IMAGE
+                    SET 			
+                    [BUS_ENT_ID] = ${company_id},[IMG_NAME] = '${fileName}',
+                    [IMG_DIR] = '${path}'
+                    WHERE BUS_ENT_ID= ${company_id}	
+                END
+            ELSE
+                BEGIN	 
+                    INSERT INTO LEASE_PRIME_IMAGE([BUS_ENT_ID],[IMG_NAME],[IMG_DIR])
+                    VALUES (${company_id},'${fileName}','${path}')		
+                END`;
+               console.log(query)
                 const request = new Request(query, function (err, rowCount, rows) {
                     if (err) {
                         console.log(err)
@@ -280,13 +295,18 @@ function getLeaseByUserID(v1,cb) {
             return;
         }
        var jsonArray = [];    
-       var query = `SELECT *,BE.BUS_ENT_ID AS BIZ_ID FROM BUSINESS_ENTITY BE
-       LEFT JOIN USER_PERSONAL_INFO UPI ON BE.USER_ID=UPI.USER_ID
-       LEFT JOIN BUILDING_INFO BI ON BE.BUS_ENT_ID = BI.BUS_ENT_ID
-       LEFT JOIN LEASE_TERMS LT ON LT.BUS_ENT_ID = BI.BUS_ENT_ID
-       LEFT JOIN LEASE_PREMISES LP ON LP.BUS_ENT_ID = BI.BUS_ENT_ID
-       LEFT JOIN LEASE_PRIME_IMAGE LPI ON LPI.BUS_ENT_ID = LP.BUS_ENT_ID
-       WHERE BE.USER_ID = ${v1}`;
+       var query = `SELECT BE.*,UPI.*,BI.*,LT.*,LP.*,LPI.*,BE.BUS_ENT_ID AS BIZ_ID,
+              PM.USERNAME AS PRINCIPLE_AGENT,PM.EMAIL AS AGENT_MAIL FROM BUSINESS_ENTITY BE
+              LEFT JOIN USER_PERSONAL_INFO UPI ON BE.USER_ID=UPI.USER_ID
+              LEFT JOIN BUILDING_INFO BI ON BE.BUS_ENT_ID = BI.BUS_ENT_ID
+              LEFT JOIN LEASE_TERMS LT ON LT.BUS_ENT_ID = BI.BUS_ENT_ID
+              LEFT JOIN LEASE_PREMISES LP ON LP.BUS_ENT_ID = BI.BUS_ENT_ID
+              LEFT JOIN LEASE_PRIME_IMAGE LPI ON LPI.BUS_ENT_ID = LP.BUS_ENT_ID
+              LEFT JOIN(SELECT * FROM  BUSINESS_SERVICE BS 
+                        WHERE BS.SERVICE_TYPE='Principle Agent') T1
+              ON BE.BUS_ENT_ID = T1.COMPANY_ID
+              LEFT JOIN PROFESSIONAL_MSTR PM ON PM.ID = T1.PROF_ID 
+              WHERE BE.USER_ID = ${v1}`;
        const request = new Request(query, (err, rowCount, rows) => {
             if (err) {
                 console.log(err)
@@ -316,6 +336,82 @@ function getLeaseByUserID(v1,cb) {
     });
 }
 
+function getLeaseSecImage(v1, cb) {
+    config.acquire(function (err, connection) {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        var jsonArray = [];
+        var query = "SELECT IMG_NAME FROM IMAGE_SECONDARY WHERE COMPANY_ID='" + v1 + "'";
+        const request = new Request(query, (err, rowCount, rows) => {
+            if (err) {
+                console.log(err)
+            } else {
+
+            }
+            for (let i = 0; i < rowCount; i++) {
+                var rowObject = {};
+                var singleRowData = rows[i];
+                for (let j = 0; j < singleRowData.length; j++) {
+                    var tempColName = singleRowData[j].metadata.colName;
+                    var tempColData = singleRowData[j].value;
+                    rowObject[tempColName] = tempColData;
+                }
+                jsonArray.push(rowObject);
+            }
+
+            if (jsonArray.length > 0) {
+                // console.log(jsonArray);
+                cb(null, jsonArray);
+            }
+            else {
+                cb(null, [{"status": "No Data Found"}]);
+            }
+            connection.release();
+        });
+        connection.execSql(request);
+    });
+}
+
+function getLeaseType(v1, cb) {
+    config.acquire(function (err, connection) {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        var jsonArray = [];
+        var query = "SELECT USER_TYPE FROM USER_PERSONAL_INFO WHERE USER_ID='" + v1 + "'";
+        const request = new Request(query, (err, rowCount, rows) => {
+            if (err) {
+                console.log(err)
+            } else {
+
+            }
+            for (let i = 0; i < rowCount; i++) {
+                var rowObject = {};
+                var singleRowData = rows[i];
+                for (let j = 0; j < singleRowData.length; j++) {
+                    var tempColName = singleRowData[j].metadata.colName;
+                    var tempColData = singleRowData[j].value;
+                    rowObject[tempColName] = tempColData;
+                }
+                jsonArray.push(rowObject);
+            }
+
+            if (jsonArray.length > 0) {
+                // console.log(jsonArray);
+                cb(null, jsonArray);
+            }
+            else {
+                cb(null, [{"status": "No Data Found"}]);
+            }
+            connection.release();
+        });
+        connection.execSql(request);
+    });
+}
+
 module.exports = {
     uploadImage: uploadImage,
     multiUploadImage: multiUploadImage,
@@ -324,6 +420,8 @@ module.exports = {
     buildingInfo: buildingInfo,
     premisesInfo: premisesInfo,
     InsertLeaseTerms: InsertLeaseTerms,
-    getLeaseByUserID: getLeaseByUserID
-   
+    getLeaseByUserID: getLeaseByUserID,
+    getLeaseSecImage: getLeaseSecImage ,
+    getLeaseType: getLeaseType 
+
   };

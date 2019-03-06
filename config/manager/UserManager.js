@@ -445,8 +445,8 @@ function getSavedList(v1, cb) {
                           
                         )T2                
                         ON T1.TRAN_ID = T2.TRAN_ID
-                WHERE ID.[USER_ID] = ${v1}
-                ORDER BY CO.COMPANY_ID DESC`;
+                        WHERE ID.[USER_ID] = ${v1}
+                        ORDER BY CO.COMPANY_ID DESC`;
         const request = new Request(query, (err, rowCount, rows) => {
             if (err) {
                 console.log(err)
@@ -693,7 +693,7 @@ function getprofTranBuyer(v1, cb) {
                 WHERE BS.SERVICE_TYPE='Principle Agent'
             )T2
             ON T1.TRAN_ID = T2.TRAN_ID
-        WHERE T1.[USER_ID] = ${v1}`;
+            WHERE T1.[USER_ID] = ${v1}`;
         const request = new Request(query, (err, rowCount, rows) => {
             if (err) {
                 console.log(err)
@@ -731,11 +731,12 @@ function getbizUser(v1, cb) {
         }
         console.log(v1);
         var jsonArray = [];
-        var query = `  SELECT CD.COMPANY_ID,CD.TITLE,CD.USER_ID AS SELLER_ID,CD.TITLE,CD.ADDRESS,CD.PRICE,CD.STATE,CD.COUNTY,CD.CATEGORY,CD.PUBLISHED,
+        var query = `SELECT CD.COMPANY_ID,CD.TITLE,CD.USER_ID AS SELLER_ID,
+        CD.TITLE,CD.ADDRESS,CD.PRICE,CD.STATE,CD.COUNTY,CD.CATEGORY,CD.PUBLISHED,
         PM.USERNAME AS PRINCIPLE_AGENT,PM.EMAIL AS AGENT_MAIL FROM [COMPANY_DETAILS] CD
         LEFT JOIN(SELECT * FROM  BUSINESS_SERVICE BS WHERE BS.SERVICE_TYPE='Principle Agent') T1
          ON CD.COMPANY_ID = T1.COMPANY_ID
-        LEFT JOIN PROFESSIONAL_MSTR PM ON PM.ID = T1.PROF_ID WHERE  CD.USER_ID=${v1}`;
+        LEFT JOIN PROFESSIONAL_MSTR PM ON PM.ID = T1.PROF_ID WHERE CD.USER_ID=${v1}`;
 
         const request = new Request(query, (err, rowCount, rows) => {
             if (err) {

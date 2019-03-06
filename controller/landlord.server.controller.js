@@ -23,6 +23,21 @@ exports.getLeaseByUserID = function (req, res) {
 	});
 };
 
+exports.getLeaseSecImage = function (req, res) {
+	var v1 = req.params.id;
+	config.getLeaseSecImage(v1, function (err, result) {
+		res.send(result);
+	});
+};
+
+
+exports.getLeaseType = function (req, res) {
+	var v1 = req.params.id;
+	config.getLeaseType(v1, function (err, result) {
+		res.send(result);
+	});
+};
+
 /** Registeration Landlord */
 exports.insertPersonal = function (req, res) {
 	var v1 = req.body;  
@@ -60,3 +75,4 @@ exports.InsertLeaseTerms = function (req, res) {
 		res.status(200).send("1");
 	});
 };
+

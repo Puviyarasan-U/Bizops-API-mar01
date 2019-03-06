@@ -86,7 +86,7 @@ function updateBizProf(v1, cb) {
             console.error(err);
             return;
         }
-        var query="UPDATE BUSINESS_SERVICE SET PROF_ID ='"+ v1.Prof_Id +"' WHERE TRAN_ID='"+ v1.ComId +"' AND USER_ID ='"+ v1.User_Id +"' AND SERVICE_TYPE='"+v1.service+"'";
+        var query="UPDATE BUSINESS_SERVICE SET PROF_ID ='"+ v1.Prof_Id +"' WHERE COMPANY_ID='"+ v1.ComId +"' AND USER_ID ='"+ v1.User_Id +"' AND SERVICE_TYPE='"+v1.service+"'";
       //  var query = "INSERT INTO USER_SERVICE VALUES ('"+ v1.User_Id +"','"+ v1.Tran_Id +"','"+ v1.Prof_Id +"','"+v1.service+"',0)";
         console.log(v1);
         const request = new Request(query, (err, rowCount, rows) => {
@@ -107,7 +107,7 @@ function removeBizProf(v1, cb) {
             console.error(err);
             return;
         }
-        var query="DELETE FROM BUSINESS_SERVICE WHERE PROF_ID ='"+ v1.Prof_Id +"' AND TRAN_ID='"+ v1.ComId +"' AND USER_ID ='"+ v1.User_Id +"' AND SERVICE_TYPE='"+v1.service+"'";
+        var query="DELETE FROM BUSINESS_SERVICE WHERE PROF_ID ='"+ v1.Prof_Id +"' AND COMPANY_ID='"+ v1.ComId +"' AND USER_ID ='"+ v1.User_Id +"' AND SERVICE_TYPE='"+v1.service+"'";
       //  var query = "INSERT INTO USER_SERVICE VALUES ('"+ v1.User_Id +"','"+ v1.Tran_Id +"','"+ v1.Prof_Id +"','"+v1.service+"',0)";
         console.log(v1);
         const request = new Request(query, (err, rowCount, rows) => {
@@ -121,7 +121,6 @@ function removeBizProf(v1, cb) {
         connection.execSql(request);
     });
 }
-
 
 function sellerPrincipleAgent(v1, cb) {
     config.acquire(function (err, connection) {

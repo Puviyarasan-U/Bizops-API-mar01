@@ -402,7 +402,6 @@ function getProcessMstr(cb) {
     });
 }
 
-
 function getMaxListId(cb) {
     config.acquire(function (err, connection) {
         if (err) {

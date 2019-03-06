@@ -37,6 +37,7 @@
 	require("../route/dataroom.server.route")(app);
 	require("../route/mail.server.route")(app);
 	require("../route/landlord.server.route")(app);
+	require("../route/tenant.server.route")(app);
 
  	return app;
  };
