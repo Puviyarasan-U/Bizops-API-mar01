@@ -344,7 +344,7 @@ function requestProfessional(v1, cb) {
     var mailOptions = {
       from: "info@bizopsai.com",
       to: v1,
-      subject: "Reset your password on Bizops AI",
+      subject: "Greetings From Bizops AI",
      // html: ` <h1>Greetings From Bizops AI<h1> `
      html: `<div style="background:#f9f9f9">
      <div style="background-color:#f9f9f9">        

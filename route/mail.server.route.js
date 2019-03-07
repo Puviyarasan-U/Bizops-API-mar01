@@ -9,7 +9,7 @@ app.post("/api/mail/user-verify", mail.userVerify);
 
 app.get("/api/mail/forgot-password/:mail", mail.forgotPassword);
 app.post("/api/mail/reset-password", mail.updateUserPassword);
-app.post("/api/mail/request-professional/:mail", mail.requestProfessional);
+app.get("/api/mail/request-professional/:mail", mail.requestProfessional);
 
 // app.post("/api/mail/send-professional", dataroom.sendtoprofessional);
 }
